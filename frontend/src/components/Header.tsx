@@ -20,8 +20,8 @@ export default function Header(props: propType) {
                     <Link to={'/sign-up'} className="w-1/4 flex justify-center items-center h-1/2 bg-blue-500 text-white rounded-sm cursor-pointer">Sign up</Link>
                     <Link to={'/login'} className="w-1/4 flex justify-center items-center h-1/2 bg-blue-500 text-white rounded-sm cursor-pointer">Login</Link>
                     {
-                        //data.isAdmin && 
-                        <Link to={'/admin'} className="w-1/4 flex justify-center items-center h-1/2 bg-red-00 text-white rounded-sm cursor-pointer">Admin</Link>
+                        data.isAdmin && 
+                        <Link to={'/admin'} className="w-1/4 flex justify-center items-center h-1/2 bg-red-400 text-white rounded-sm cursor-pointer">Admin</Link>
                     }
                 </div>
             </div>
