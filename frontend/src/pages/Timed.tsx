@@ -110,7 +110,7 @@ export default function Timed() {
           if (jsonRes.win === true) {
             setArrayIndex(6);
             
-            const newScore = score + (6 - arrayIndex);
+            const newScore = score + (10 - arrayIndex);
             setScore(newScore);
             if (newScore > topScore){
               setTopScore(newScore);
@@ -148,7 +148,7 @@ export default function Timed() {
     setKeyboardVals(keyboardArr);
 
     const newword:string = wordBank[Math.floor(Math.random()*wordBank.length)];
-    //console.log(newword);
+    console.log(newword);
     sendChangeWordRequest(newword);
   }
 
