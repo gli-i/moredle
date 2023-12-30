@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 
 import { wordCheckResponseInterface, cellValueInterface, wordsArr, keyboardArr } from '../logic/baseWordle';
 import { isLetter, concatStringArr } from '../logic/stringFunctions';
-import { wordBank } from '../logic/timedWordBank';
+import { wordBank } from '../logic/wordBank';
 
 import Header from '../components/Header'
 import Keyboard from '../components/Keyboard';
@@ -15,6 +15,8 @@ import { NavBar } from '../components/NavBar';
 export default function Timed() {
   const grid = useRef(null);
 
+  const [answer, setAnswer] = useState<string>("apple");
+
   const [words, setWords] = useState<cellValueInterface[][]>(structuredClone(wordsArr));
 
   const [keyboardVals, setKeyboardVals] = useState<Map<string, number>>(keyboardArr);
@@ -25,6 +27,7 @@ export default function Timed() {
 
   // states are "ready". "running", & "over"
   const [gameStatus, setGameStatus] = useState<string>("ready");
+
   const [secs, setSecs] = useState<number>(0);
 
   const [score, setScore] = useState<number>(0);
@@ -32,10 +35,10 @@ export default function Timed() {
 
   const [animate, setAnimate] = useState<{ i: number, type: string | null }>({ i: 0, type: null });
 
+
   function onKeyDown(event: KeyboardEvent) {
     setLetter(event.key);
   }
-
   // when clicking the onscreen keyboard
   function keyClick(letter: string) {
     letter === "Del" ? setLetter("Backspace") : setLetter(letter);

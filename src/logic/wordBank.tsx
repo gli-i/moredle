@@ -9,3 +9,19 @@ export const wordBank:string[] =  ["which","there","their","about","would","thes
     "taken","built","heart","ready","quite","class","bring","round","daisy","fairy","apple","crane",
     "cream","skunk","stink","death","zebra","lions","cheap","swift","sawed","speak","lover","ghost",
     "queen","style"];
+
+
+export async function getWord(){
+    const file = require('./words.txt');
+
+    const response = await fetch(file);
+    const data = await response.text();
+
+    const wordsArr =  data.split("\n");
+    const numWords = wordsArr.length;
+    let i:number = Math.floor(Math.random() * numWords);
+
+    console.log(wordsArr[i]);
+    return wordsArr[i];
+
+}

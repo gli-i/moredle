@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 
-import { wordCheckResponseInterface, cellValueInterface, wordsArr, keyboardArr } from '../logic/baseWordle';
-import { isLetter, concatStringArr } from '../logic/stringFunctions';
+import { cellValueInterface, wordsArr, keyboardArr, gridLetter, gridBackspace, gridEnter } from '../logic/baseWordle';
+import { isLetter } from '../logic/stringFunctions';
+import { getWord } from '../logic/wordBank';
 
 import Header from '../components/Header'
 import Keyboard from '../components/Keyboard';
@@ -12,6 +13,8 @@ import { NavBar } from '../components/NavBar';
 export default function Classic() {
   const grid = useRef(null);
 
+  const [answer, setAnswer] = useState<string>("");
+
   const [words, setWords] = useState<cellValueInterface[][]>(structuredClone(wordsArr));
 
   const [keyboardVals, setKeyboardVals] = useState<Map<string, number>>(keyboardArr);
@@ -20,33 +23,18 @@ export default function Classic() {
   const [arrayIndex, setArrayIndex] = useState<number>(0);
   const [letterIndex, setLetterIndex] = useState<number>(0);
 
-  // states are "running", "victory", & "lost"
-  const [gameStatus, setGameStatus] = useState<string>("running");
+  // states are "ready", "running", "victory", & "lost"
+  const [gameStatus, setGameStatus] = useState<string>("ready");
 
   const [animate, setAnimate] = useState<{i:number,type:string|null}>({i: 0, type: null});
 
+  
   function onKeyDown(event: KeyboardEvent) {
     setLetter(event.key);
   }
   // when clicking the onscreen keyboard
   function keyClick(letter: string) {
     letter === "Del" ? setLetter("Backspace") : setLetter(letter);
-  }
-
-  function handleBackspace() {
-    let prevLetterIndex = letterIndex - 1;
-    if (prevLetterIndex >= 0 && arrayIndex < 6) {
-      let wordsCopy = [...words];
-      let wordLineCopy = wordsCopy[arrayIndex];
-
-
-      wordLineCopy[prevLetterIndex]['letter'] = ''
-      wordsCopy[arrayIndex] = wordLineCopy;
-
-      setWords(wordsCopy);
-
-      setLetterIndex(prevLetterIndex);
-    }
   }
 
   /*
@@ -62,73 +50,30 @@ export default function Classic() {
 
   */
 
-  async function handleEnter() {
-    if (letterIndex > 4 && arrayIndex < 6) {
-      let concatedStr = concatStringArr(words[arrayIndex]);
+  function handleLetter(){
+    if (letter !== '' && letterIndex <= 4 && arrayIndex < 6) {
+      gridLetter(letter, arrayIndex, letterIndex, setLetterIndex, words, setWords);
+    }
+  }
 
-      try {
-        const response = await fetch(`https://0indrq4mb3.execute-api.us-east-1.amazonaws.com/Prod/computescore`, {
-          method: "POST", 
-          body: JSON.stringify({word: concatedStr}), 
-          credentials: "include" 
-        });
-        const jsonRes: wordCheckResponseInterface = await response.json();
-        console.log(jsonRes); 
+  function handleBackspace(){
+    if (letterIndex > 0 && arrayIndex < 6){
+      gridBackspace(arrayIndex, letterIndex, setLetterIndex, words, setWords);
+    }
+  }
 
-        if (jsonRes.found) {
-          let wordsCopy = structuredClone(words);
-          let kValsCopy = new Map(keyboardVals);
+  function handleEnter(){
+    if (letterIndex > 4 && arrayIndex < 6){
+      setGameStatus(gridEnter(answer, arrayIndex, setArrayIndex, letterIndex, setLetterIndex, words, setWords, keyboardVals, setKeyboardVals));
 
-          for (let i in jsonRes.optionsArray) {
-
-            // if the letter's been checked & it's not in word, make val 3 (dark grey)
-            // could probably fix this in backend - couldn't get to work
-            if (jsonRes.optionsArray[i] === 0){
-              jsonRes.optionsArray[i] = 3;
-            }
-
-            wordsCopy[arrayIndex][i].value = jsonRes.optionsArray[i];
-            
-            const curLetter = wordsCopy[arrayIndex][i].letter;
-
-            // if the letter val is already 2 (confirmed) or 3 (not present), colour shouldn't change
-            //  otherwise, change its corresponding key in the keyboard to match cur value
-            if (keyboardVals.get(curLetter)! < 2){
-              kValsCopy.set(curLetter, jsonRes.optionsArray[i]);
-            }
-          }
-
-          let arrayIndexCopy:number = arrayIndex;
-          arrayIndexCopy += 1;
-
-          setAnimate({i:arrayIndex, type:"blink"});
-          setTimeout(() => setAnimate({i:-1, type:null}), 300);
-
-          setArrayIndex(arrayIndexCopy);
-          setLetterIndex(0);
-
-          setWords(wordsCopy);
-          setKeyboardVals(kValsCopy);
-
-          // win
-          if (jsonRes.win === true) {
-            setArrayIndex(6);
-            setGameStatus("victory");
-
-            return;
-          }
-          // lost
-          if (arrayIndexCopy >= 6){
-            setGameStatus("lost");
-          }
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    } else {
-      // incorrect input (less than 5 chars)
-      setAnimate({i:arrayIndex, type:"shake"});
+      setAnimate({i:arrayIndex, type:"blink"});
       setTimeout(() => setAnimate({i:-1, type:null}), 300);
+
+    } else if (arrayIndex === 6){ // game victory or over
+      restartGame();
+    } else {      // incorrect input (less than 5 chars)
+        setAnimate({i:arrayIndex, type:"shake"});
+        setTimeout(() => setAnimate({i:-1, type:null}), 300);
     }
   }
 
@@ -138,7 +83,7 @@ export default function Classic() {
     setArrayIndex(0);
     setLetterIndex(0);
     setKeyboardVals(keyboardArr);
-    setGameStatus("running");
+    setGameStatus("ready");
   }
 
   useEffect(() => {
@@ -149,26 +94,29 @@ export default function Classic() {
     }
   }, [])
 
+  // on letter change (user input)
   useEffect(() => {
-    if (isLetter(letter) && letter !== '' && letterIndex <= 4 && arrayIndex < 6) {
-      let prevWords = [...words]
-      prevWords[arrayIndex][letterIndex].letter = letter;
-      setWords(prevWords)
-      let prevIndex = letterIndex
-      prevIndex += 1;
-      setLetterIndex(prevIndex)
-    }
-    else {
-      if (letter === 'Backspace') {
+    if (isLetter(letter)){
+      handleLetter();
+    } else if (letter === 'Backspace') {
         handleBackspace();
-      }
-      else if (letter === 'Enter') {
+    } else if (letter === 'Enter') {
         handleEnter();
-      }
     }
-    setLetter('')
+
+    setLetter('');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [letter])
+
+  // if game is ready, get new answer word & start
+  useEffect(() => {
+    if (gameStatus === "ready") {
+      getWord().then((word) => {
+        setAnswer(word);
+      })
+      setGameStatus("running");
+    }
+  }, [gameStatus]);
 
   return (
     <div className='h-screen flex flex-col justify-between gap-1'>
@@ -191,7 +139,7 @@ export default function Classic() {
             keyClick = {keyClick}
           />
         </div>
-        {gameStatus !== "running" && <GameOver 
+        {(gameStatus === "victory" || gameStatus === "lost") && <GameOver 
             restartGame = {restartGame}
             gameStatus = {gameStatus}
           />}
