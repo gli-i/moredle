@@ -14,12 +14,6 @@ export interface cellValueInterface {
     value: number,
   }
 
-// VALUES:
-// 0 - white, never been guessed
-// 1 - yellow, in word but correct spot not found
-// 2- green, in word & correct spot found
-// 3 - black, guessed but not in word
-
 // default state of the grids
 export const wordsArr:cellValueInterface[][] = [
         [{ letter: '', value: 0 }, { letter: '', value: 0 }, { letter: '', value: 0 }, { letter: '', value: 0 }, { letter: '', value: 0 }],
@@ -78,6 +72,7 @@ export function gridBackspace(
 }
 
 // on valid guess enter
+// returns whether the guess was correct or not
 export function gridEnter(
   answer : string, 
   arrayIndex : number, setArrayIndex : (i:number) => void, 
@@ -85,7 +80,7 @@ export function gridEnter(
   words : cellValueInterface[][], 
   setWords : (words:cellValueInterface[][]) => void, 
   keyboardVals : Map<string, number>, 
-  setKeyboardVals : (k:Map<string, number>) => void){
+  setKeyboardVals : (k:Map<string, number>) => void) : boolean {
 
   let guess = concatStringArr(words[arrayIndex]);
 
@@ -114,19 +109,21 @@ export function gridEnter(
   setWords(wordsCopy);
   setKeyboardVals(kValsCopy);
 
-  // win
+  // result
   if (guess === answer) {
-    setArrayIndex(6);
-    return "victory";
+    return true;
+  } else {
+    return false;
   }
-  // lost
-  if (arrayIndexCopy >= 6){
-    return "lost";
-  }
-  return "running";
 }
 
 // take guess & answer & determine grid colour values
+
+// VALUES:
+// 0 - white, never been guessed
+// 1 - yellow, in word but correct spot not found
+// 2- green, in word & correct spot found
+// 3 - black, guessed but not in word
 function getGuessColors (guess:string, answer:string) : number[] {
   let letterCount : Map<string, number> = new Map();
   let ret : number[] = [3, 3, 3, 3, 3];
@@ -145,7 +142,7 @@ function getGuessColors (guess:string, answer:string) : number[] {
 
   // check for yellow - exists but in incorrect spot
   for (let i = 0; i<5; i++){
-    if ( ret[i] > 1 && (letterCount.get(guess[i]) ?? -1) > 0){
+    if ( ret[i] !== 2 && (letterCount.get(guess[i]) ?? -1) > 0){
       ret[i] = 1;
     }
   }

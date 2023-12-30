@@ -13,7 +13,7 @@ import { NavBar } from '../components/NavBar';
 export default function Classic() {
   const grid = useRef(null);
 
-  const [answer, setAnswer] = useState<string>("");
+  const [answer, setAnswer] = useState<string>('');
 
   const [words, setWords] = useState<cellValueInterface[][]>(structuredClone(wordsArr));
 
@@ -28,7 +28,7 @@ export default function Classic() {
 
   const [animate, setAnimate] = useState<{i:number,type:string|null}>({i: 0, type: null});
 
-  
+
   function onKeyDown(event: KeyboardEvent) {
     setLetter(event.key);
   }
@@ -50,21 +50,28 @@ export default function Classic() {
 
   */
 
-  function handleLetter(){
+  function handleLetter() : void {
     if (letter !== '' && letterIndex <= 4 && arrayIndex < 6) {
       gridLetter(letter, arrayIndex, letterIndex, setLetterIndex, words, setWords);
     }
   }
 
-  function handleBackspace(){
+  function handleBackspace() : void {
     if (letterIndex > 0 && arrayIndex < 6){
       gridBackspace(arrayIndex, letterIndex, setLetterIndex, words, setWords);
     }
   }
 
-  function handleEnter(){
+  function handleEnter() : void {
     if (letterIndex > 4 && arrayIndex < 6){
-      setGameStatus(gridEnter(answer, arrayIndex, setArrayIndex, letterIndex, setLetterIndex, words, setWords, keyboardVals, setKeyboardVals));
+      const victory = gridEnter(answer, arrayIndex, setArrayIndex, letterIndex, setLetterIndex, words, setWords, keyboardVals, setKeyboardVals);
+
+      if (victory){
+        setArrayIndex(6);
+        setGameStatus("victory");
+      } else if (arrayIndex > 4){ // was at last row & did not win
+        setGameStatus("lost");
+      }
 
       setAnimate({i:arrayIndex, type:"blink"});
       setTimeout(() => setAnimate({i:-1, type:null}), 300);

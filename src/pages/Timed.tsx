@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 
-import { wordCheckResponseInterface, cellValueInterface, wordsArr, keyboardArr } from '../logic/baseWordle';
-import { isLetter, concatStringArr } from '../logic/stringFunctions';
-import { wordBank } from '../logic/wordBank';
+import { cellValueInterface, wordsArr, keyboardArr, gridLetter, gridBackspace, gridEnter } from '../logic/baseWordle';
+import { isLetter } from '../logic/stringFunctions';
+import { getWord } from '../logic/wordBank';
 
 import Header from '../components/Header'
 import Keyboard from '../components/Keyboard';
@@ -15,7 +15,7 @@ import { NavBar } from '../components/NavBar';
 export default function Timed() {
   const grid = useRef(null);
 
-  const [answer, setAnswer] = useState<string>("apple");
+  const [answer, setAnswer] = useState<string>('');
 
   const [words, setWords] = useState<cellValueInterface[][]>(structuredClone(wordsArr));
 
@@ -44,104 +44,54 @@ export default function Timed() {
     letter === "Del" ? setLetter("Backspace") : setLetter(letter);
   }
 
-  function handleBackspace() {
-    let prevLetterIndex = letterIndex - 1;
-    if (prevLetterIndex >= 0 && arrayIndex < 6) {
-      let wordsCopy = [...words];
-      let wordLineCopy = wordsCopy[arrayIndex];
 
-
-      wordLineCopy[prevLetterIndex]['letter'] = '';
-      wordsCopy[arrayIndex] = wordLineCopy;
-
-      setWords(wordsCopy);
-
-      setLetterIndex(prevLetterIndex);
+  function handleLetter() : void {
+    if (letter !== '' && letterIndex <= 4 && arrayIndex < 6) {
+      gridLetter(letter, arrayIndex, letterIndex, setLetterIndex, words, setWords);
     }
   }
 
-  async function handleEnter() {
-    if (letterIndex > 4 && arrayIndex < 6) {
-      let concatedStr = concatStringArr(words[arrayIndex]);
+  function handleBackspace() : void {
+    if (letterIndex > 0 && arrayIndex < 6){
+      gridBackspace(arrayIndex, letterIndex, setLetterIndex, words, setWords);
+    }
+  }
 
-      try {
-        const response = await fetch(`https://0indrq4mb3.execute-api.us-east-1.amazonaws.com/Prod/computescore`, {
-          method: "POST",
-          body: JSON.stringify({ word: concatedStr }),
-          credentials: "include"
-        });
-        const jsonRes: wordCheckResponseInterface = await response.json();
-        console.log(jsonRes); 
+  function handleEnter() : void {
+    if (letterIndex > 4 && arrayIndex < 6){
+      const guessResult = gridEnter(answer, arrayIndex, setArrayIndex, letterIndex, setLetterIndex, words, setWords, keyboardVals, setKeyboardVals);
 
-        if (jsonRes.found) {
-          let wordsCopy = structuredClone(words);
-          let kValsCopy = new Map(keyboardVals);
+      setAnimate({i:arrayIndex, type:"blink"});
+      setTimeout(() => setAnimate({i:-1, type:null}), 300);
 
-          for (let i in jsonRes.optionsArray) {
-
-            // if the letter's been checked & it's not in word, make val 3 (dark grey)
-            // could probably fix this in backend - couldn't get to work
-            if (jsonRes.optionsArray[i] === 0) {
-              jsonRes.optionsArray[i] = 3;
-            }
-
-            wordsCopy[arrayIndex][i].value = jsonRes.optionsArray[i];
-
-            const curLetter = wordsCopy[arrayIndex][i].letter;
-
-            // if the letter val is already 2 (confirmed) or 3 (not present), colour shouldn't change
-            //  otherwise, change its corresponding key in the keyboard to match cur value
-            if (keyboardVals.get(curLetter)! < 2) {
-              kValsCopy.set(curLetter, jsonRes.optionsArray[i]);
-            }
-          }
-
-          let arrayIndexCopy: number = arrayIndex;
-          arrayIndexCopy += 1;
-
-          setAnimate({ i: arrayIndex, type: "blink" });
-          setTimeout(() => setAnimate({ i: -1, type: null }), 300);
-
-          setArrayIndex(arrayIndexCopy)
-          setLetterIndex(0);
-
-          setWords(wordsCopy);
-          setKeyboardVals(kValsCopy);
-
-          // win
-          if (jsonRes.win === true) {
-            setArrayIndex(6);
-            
-            const newScore = score + (10 - arrayIndex);
-            setScore(newScore);
-            if (newScore > topScore){
-              setTopScore(newScore);
-            }
-            resetWord();
-            return;
-          }
-          // lose
-          if (arrayIndexCopy >= 6){
-            resetWord();
-          }
+      if (guessResult){
+        const newScore = score + (10 - arrayIndex);
+        setScore(newScore);
+        if (newScore > topScore){
+          setTopScore(newScore);
         }
-      } catch (error) {
-        console.log(error);
+
+        resetWord();
+      } else if (arrayIndex > 4){ // was at last row & did not win
+        resetWord();
       }
-    } else {
-      // incorrect input (less than 5 chars)
-      setAnimate({ i: arrayIndex, type: "shake" });
-      setTimeout(() => setAnimate({ i: -1, type: null }), 300);
+
+    } else if (gameStatus === "over"){ // game already won or lost
+      restartGame();
+
+    } else {      // incorrect input (less than 5 chars)
+        setAnimate({i:arrayIndex, type:"shake"});
+        setTimeout(() => setAnimate({i:-1, type:null}), 300);
     }
   }
 
+  // restarts the entire game, including current score
   function restartGame() {
-    resetWord();
     setScore(0);
     setGameStatus("ready");
   }
 
-  // clears the grid & keyboard
+  // clears the grid & keyboard, & gives a new word
   function resetWord() {
     setWords(structuredClone(wordsArr));
     setLetter('');
@@ -149,30 +99,10 @@ export default function Timed() {
     setLetterIndex(0);
     setKeyboardVals(keyboardArr);
 
-    const newword:string = wordBank[Math.floor(Math.random()*wordBank.length)];
-    console.log(newword);
-    sendChangeWordRequest(newword);
+    getWord().then((word) => {
+      setAnswer(word);
+    })
   }
-
-  // changes the correct word
-  const [response, setResponse] = useState<{ visible: Boolean, success: Boolean, message: string }>();
-  async function sendChangeWordRequest(newword:string) {
-    try {
-        const res = await fetch("https://0indrq4mb3.execute-api.us-east-1.amazonaws.com/Prod/changeAnswer", {
-            method: "Post",
-            body: JSON.stringify({ globalWord: newword }),
-            credentials: "include"
-        })
-
-        const jsonRes = await res.json();
-
-        if (res.ok) {
-            setResponse({ visible: true, success: true, message: jsonRes.message })
-        }
-    } catch (error) {
-        setResponse({ visible: true, success: false, message: 'error' });
-    }
-}
 
   useEffect(() => {
     window.addEventListener('keydown', onKeyDown)
@@ -184,18 +114,14 @@ export default function Timed() {
 
   useEffect(() => {
     if (gameStatus !== "over") {
-      if (isLetter(letter) && letter !== '' && letterIndex <= 4 && arrayIndex < 6) {
+      if (isLetter(letter)) {
 
+        // if the game hasn't started yet, start it
         if (gameStatus === "ready") {
           setGameStatus("running");
         }
 
-        let prevWords = [...words]
-        prevWords[arrayIndex][letterIndex].letter = letter;
-        setWords(prevWords)
-        let prevIndex = letterIndex
-        prevIndex += 1;
-        setLetterIndex(prevIndex)
+        handleLetter();
 
       } else if (letter === 'Backspace') {
         handleBackspace();
@@ -213,7 +139,7 @@ export default function Timed() {
 
   useEffect(() => {
     if (gameStatus === "ready") {
-      setSecs(120);
+      setSecs(180);
       resetWord();
     }
   }, [gameStatus]);
