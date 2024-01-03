@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 import { cellValueInterface, wordsArr, keyboardArr, gridLetter, gridBackspace, gridEnter } from '../logic/baseWordle';
 import { isLetter } from '../logic/stringFunctions';
@@ -13,8 +13,6 @@ import GameOver from '../components/GameOver';
 import { NavBar } from '../components/NavBar';
 
 export default function Timed() {
-  const grid = useRef(null);
-
   const [answer, setAnswer] = useState<string>('');
 
   const [words, setWords] = useState<cellValueInterface[][]>(structuredClone(wordsArr));
@@ -178,7 +176,6 @@ export default function Timed() {
           <div className='flex-1 hidden md:inline'></div>
           <div className=''>
             <WordsGrid
-              grid={grid}
               words={words}
               animate={animate}
               smaller={true}

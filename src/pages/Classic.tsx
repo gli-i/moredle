@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 import { cellValueInterface, wordsArr, keyboardArr, gridLetter, gridBackspace, gridEnter } from '../logic/baseWordle';
 import { isLetter } from '../logic/stringFunctions';
@@ -11,8 +11,6 @@ import GameOver from '../components/GameOver';
 import { NavBar } from '../components/NavBar';
 
 export default function Classic() {
-  const grid = useRef(null);
-
   const [answer, setAnswer] = useState<string>('');
 
   const [words, setWords] = useState<cellValueInterface[][]>(structuredClone(wordsArr));
@@ -135,7 +133,6 @@ export default function Classic() {
       <main className='h-full flex flex-col'>
         <div className='flex-[2] flex justify-center items-center md:p-1 lg:p-2 2xl:p-4'>
           <WordsGrid
-            grid = {grid}
             words = {words}
             animate = {animate}
           />
