@@ -27,9 +27,6 @@ export default function Header() {
               // User is signed in, see docs for a list of available properties
               // https://firebase.google.com/docs/reference/js/firebase.User
               setSignedIn(true);
-            } else {
-              // User is signed out
-              console.log("user is logged out");
             }
           });
          

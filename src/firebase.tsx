@@ -2,6 +2,7 @@
 
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { getFirestore, doc, setDoc, getDoc, DocumentData } from "firebase/firestore";
 
 // TODO: Add SDKs for Firebase products that you want to use
 
@@ -35,7 +36,49 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
+// Initialize Cloud Firestore and get a reference to the service
+
+const db = getFirestore(app);
+
+// Creating user data in collection
+
+export async function createUserData(email:string, displayName:string, password:string){
+  return new Promise( (resolve, reject) => {
+    setDoc(doc(db, "users", email), {
+      email,
+      displayName,
+      password,
+      classicGames: 0,
+      classicWins: 0,
+      timedHigh: 0,
+    })
+      .then(() => {
+        resolve(`${email} added to collection!`);
+      })
+      .catch((err) => {
+        reject(err);
+      })
+    })
+}
+
+// Reading user data
+
+export async function getUser(email:string) : Promise<DocumentData> {
+  return new Promise( (resolve, reject) => {
+    getDoc(doc(db, "users", email))
+      .then((user) => {
+        resolve(user.data()!);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  })
+}
+
+
 // Initialize Firebase Authentication and get a reference to the service
 
 export const auth = getAuth(app);
+
+
 export default app;

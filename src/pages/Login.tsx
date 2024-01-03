@@ -12,21 +12,16 @@ export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const loginRequest = () => {
-
+    async function loginRequest() {
         signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            // Signed in
-            const user = userCredential.user;
+        .then(() => {
             navigate("/");
-            console.log(user);
         })
         .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
             console.log(errorCode, errorMessage)
         });
-       
     }
 
     return (

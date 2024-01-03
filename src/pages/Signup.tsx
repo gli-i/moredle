@@ -1,35 +1,50 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom";
 import Header from "../components/Header"
 import { NavBar } from "../components/NavBar"
+
+import { auth, createUserData } from '../firebase';
 import {  createUserWithEmailAndPassword  } from 'firebase/auth';
-import { auth } from '../firebase';
 
 export default function Signup(){
     const navigate = useNavigate()
     
     const [email, setEmail] = useState('');
+    const [dname, setDname] = useState('');
     const [password, setPassword] = useState(''); 
 
-    const signUpRequest = async () => {
+    const [userCreated, setUserCreated] = useState<boolean>(false);
+    const [dataCreated, setDataCreated] = useState<boolean>(false);
+
+    async function signUpRequest() {
        
-        await createUserWithEmailAndPassword(auth, email, password)
-          .then((userCredential) => {
-              // Signed in
-              const user = userCredential.user;
-              console.log(user);
-              navigate("/login")
-              // ...
+        createUserWithEmailAndPassword(auth, email, password)
+          .then(() => {
+            setUserCreated(true);
+            
           })
           .catch((error) => {
-              const errorCode = error.code;
-              const errorMessage = error.message;
-              console.log(errorCode, errorMessage);
-              // ..
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log(errorCode, errorMessage);
           });
-   
-     
+
+        createUserData(email, dname, password)
+            .then(() => {
+                setDataCreated(true);
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log(errorCode, errorMessage);
+            })
       }
+
+    useEffect(() => {
+        if (userCreated && dataCreated){
+            navigate("/login");
+        }
+    }, [userCreated, dataCreated, navigate])
 
     return (
         <> 
@@ -45,6 +60,9 @@ export default function Signup(){
 
                     <label className={'text-lg py-0.5'}>Email</label>
                     <input onChange={(e)=>{setEmail(e.target.value)}} value={email} type="text" className={'h-8 border rounded border-gray-500 p-2'}/>
+
+                    <label className={'text-lg py-0.5'}>Display Name</label>
+                    <input onChange={(e)=>{setDname(e.target.value)}} value={dname} type="text" className={'h-8 border rounded border-gray-500 p-2'}/>
 
                     <label className={'text-lg py-0.5'}>Password</label>
                     <input onChange={(e)=>{setPassword(e.target.value)}} value={password} type="text" className={'h-8 border rounded border-gray-500 p-2'}/>

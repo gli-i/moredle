@@ -6,8 +6,9 @@ import { slide as Menu } from "react-burger-menu";
 import { Link, useNavigate } from "react-router-dom";
 import "./NavBar.css";
 
-import { onAuthStateChanged, signOut, User } from "firebase/auth";
-import { auth } from '../firebase';
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { auth, getUser } from '../firebase';
+import { DocumentData } from "firebase/firestore";
 
 type navBarProps = {
   pageWrapId: string;
@@ -17,7 +18,7 @@ type navBarProps = {
 export const NavBar = ({ pageWrapId, outerContainerId }: navBarProps) => {
   const navigate = useNavigate();
 
-  const [curUser, setCurUser] = useState<User | null>(null);
+  const [curUser, setCurUser] = useState<DocumentData | null>(null);
 
     const handleLogout = () => {               
         signOut(auth).then(() => {
@@ -33,12 +34,12 @@ export const NavBar = ({ pageWrapId, outerContainerId }: navBarProps) => {
     useEffect(()=>{
         onAuthStateChanged(auth, (user) => {
             if (user) {
-              // User is signed in, see docs for a list of available properties
-              // https://firebase.google.com/docs/reference/js/firebase.User
-              setCurUser(user);
+              // User is signed in
+              getUser(user.email!).then((data) => {
+                setCurUser(data);
+              });
             } else {
-              // User is signed out
-              console.log("user is logged out");
+              setCurUser(null);
             }
           });
          
@@ -61,6 +62,7 @@ export const NavBar = ({ pageWrapId, outerContainerId }: navBarProps) => {
 
         { curUser &&
           <div className="user-border">
+              <div className="menu-item user-section">{curUser.displayName}</div>
               <div className="menu-item user-section">{curUser.email}</div>
               <button onClick={handleLogout} className="menu-item user-section">Logout</button>
           </div>

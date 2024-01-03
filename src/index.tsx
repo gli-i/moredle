@@ -51,6 +51,8 @@ const root = ReactDOM.createRoot(
 );
 root.render(
     <>
+      <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
       <GlobalStateProvider>
         <RouterProvider router={router} />
       </GlobalStateProvider>
