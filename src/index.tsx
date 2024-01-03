@@ -8,7 +8,6 @@ import Classic from './pages/Classic';
 import Timed from './pages/Timed';
 import Stats from './pages/Stats';
 import HowToPlay from './pages/HowToPlay';
-import Admin from './pages/admin';
 import GlobalStateProvider from './globalState';
 
 import {
@@ -45,10 +44,6 @@ const router = createBrowserRouter([
     path: "/howtoplay",
     element: <HowToPlay />
   }, 
-  {
-    path: "/admin",
-    element: <Admin/>
-  }
 ]);
 
 const root = ReactDOM.createRoot(

@@ -1,44 +1,35 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom";
 import Header from "../components/Header"
 import { NavBar } from "../components/NavBar"
+import {  createUserWithEmailAndPassword  } from 'firebase/auth';
+import { auth } from '../firebase';
 
 export default function Signup(){
     const navigate = useNavigate()
     
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState(''); 
 
-    const [requestState, setRequestState] = useState({status: 'ok', visible: false,  message: ''}); 
-
-    async function signUpRequest(){
-        try {
-            const res = await fetch('https://0indrq4mb3.execute-api.us-east-1.amazonaws.com/Prod/signup', {
-                method: "POST",
-                body: JSON.stringify({
-                    _id: username,
-                    password: password                        
-                }), 
-                credentials: "include"
-            });
-            //const jsonRes = await res.json(); 
-
-            if (res.ok){
-                navigate("/"); 
-            }
-
-        } catch (error) {
-            console.log(error); 
-        }
-    }
-
-    useEffect(()=>{
-        if (requestState.visible === true){
-            setTimeout(()=>{
-                setRequestState({status: 'ok', visible: false, message: ''})
-            }, 3000); 
-        }
-    }, [requestState])
+    const signUpRequest = async () => {
+       
+        await createUserWithEmailAndPassword(auth, email, password)
+          .then((userCredential) => {
+              // Signed in
+              const user = userCredential.user;
+              console.log(user);
+              navigate("/login")
+              // ...
+          })
+          .catch((error) => {
+              const errorCode = error.code;
+              const errorMessage = error.message;
+              console.log(errorCode, errorMessage);
+              // ..
+          });
+   
+     
+      }
 
     return (
         <> 
@@ -52,8 +43,8 @@ export default function Signup(){
 
                     <h1 className={'text-center text-4xl font-bold'} >Join us!</h1>
 
-                    <label className={'text-lg py-0.5'}>Username</label>
-                    <input onChange={(e)=>{setUsername(e.target.value)}} value={username} type="text" className={'h-8 border rounded border-gray-500 p-2'}/>
+                    <label className={'text-lg py-0.5'}>Email</label>
+                    <input onChange={(e)=>{setEmail(e.target.value)}} value={email} type="text" className={'h-8 border rounded border-gray-500 p-2'}/>
 
                     <label className={'text-lg py-0.5'}>Password</label>
                     <input onChange={(e)=>{setPassword(e.target.value)}} value={password} type="text" className={'h-8 border rounded border-gray-500 p-2'}/>

@@ -135,6 +135,7 @@ export default function Timed() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [letter])
 
+
   // Countdown Timer Logic
 
   useEffect(() => {
@@ -182,20 +183,6 @@ export default function Timed() {
               animate={animate}
               smaller={true}
             />
-            {/* {<button onClick={
-              () => {
-                setArrayIndex(6);
-                const newScore = score + (6 - arrayIndex);
-              setScore(newScore);
-              if (newScore > topScore){
-                setTopScore(newScore);
-              }
-              resetWord();
-              }
-            } className='p-1 rounded bg-green-400'>Correct answer</button>
-            <button onClick={
-              () => {resetWord()}
-            } className='p-1 rounded bg-red-400'>Wrong answer</button>} */}
           </div>
           <div className="flex-1 hidden md:flex flex-col items-center md:gap-4 lg:gap-8 2xl:gap-14 relative right-[5vw]">
             <Timer

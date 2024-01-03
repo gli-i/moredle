@@ -11,7 +11,7 @@ export default function Timer({ secs } : timerProps) {
             {Math.floor(secs/60)}:{(secs%60).toString().padStart(2,'0')}
         </h3>
         <h3 className="hidden md:block text-graydark">
-            / 2:00
+            / 3:00
         </h3>
         </div>
     )

@@ -1,41 +1,32 @@
-import { useState, useContext } from "react"  
+import { useState } from "react"  
 import { Link, useNavigate } from "react-router-dom";
 import { NavBar } from "../components/NavBar"
 import Header from "../components/Header";
 
-import { GlobalContext, GlobalStateType }  from '../globalState'
+import {  signInWithEmailAndPassword   } from 'firebase/auth';
+import { auth } from '../firebase';
 
 export default function Login() {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const data = useContext<GlobalStateType>(GlobalContext);
-   
+    const loginRequest = () => {
 
-    async function sendLoginRequest(){
-        try {
-            const res = await fetch('https://0indrq4mb3.execute-api.us-east-1.amazonaws.com/Prod/signin', {
-                method: "POST",
-                body: JSON.stringify({_id: username, password: password}),
-                credentials: "include"
-            });
-            const resJson = await res.json();
-
-            if (res.ok){
-                if (resJson.admin) data.setIsAdmin(true); 
-                navigate('/')
-            }
-            else{
-                // mock
-      
-                throw new Error("bad request"); 
-            }
-        } catch (error) {
-            navigate('/')
-            console.log(error); 
-        }
+        signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            // Signed in
+            const user = userCredential.user;
+            navigate("/");
+            console.log(user);
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log(errorCode, errorMessage)
+        });
+       
     }
 
     return (
@@ -50,13 +41,13 @@ export default function Login() {
 
                     <h1 className={'text-center text-4xl font-bold'} >Welcome back!</h1>
 
-                    <label className={'text-lg py-0.5'}>Username</label>
-                    <input onChange={(e)=>{setUsername(e.target.value)}} value={username} type="text" className={'h-8 border rounded border-gray-500 p-2'}/>
+                    <label className={'text-lg py-0.5'}>Email</label>
+                    <input onChange={(e)=>{setEmail(e.target.value)}} value={email} type="text" className={'h-8 border rounded border-gray-500 p-2'}/>
 
                     <label className={'text-lg py-0.5'}>Password</label>
                     <input onChange={(e)=>{setPassword(e.target.value)}} value={password} type="text" className={'h-8 border rounded border-gray-500 p-2'}/>
 
-                    <button onClick={sendLoginRequest} type="button" className={'h-10 border rounded border-black bg-black text-white'}>Log in</button>
+                    <button onClick={loginRequest} type="button" className={'h-10 border rounded border-black bg-black text-white'}>Log in</button>
 
                     <label className={'text-center text-[18px] mt-4'}> Not a member?   
                         <Link to={'/sign-up'} className='text-blue-500'> Sign up! </Link>
