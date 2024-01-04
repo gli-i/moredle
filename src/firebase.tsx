@@ -2,35 +2,8 @@
 
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getFirestore, doc, setDoc, getDoc, DocumentData } from "firebase/firestore";
-
-// TODO: Add SDKs for Firebase products that you want to use
-
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-
-// Your web app's Firebase configuration
-
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-
-const firebaseConfig = {
-
-  apiKey: "AIzaSyCw5jIog1o8Zai1UYawxaef8GGUG3g_2CY",
-
-  authDomain: "moredle.firebaseapp.com",
-
-  projectId: "moredle",
-
-  storageBucket: "moredle.appspot.com",
-
-  messagingSenderId: "759421325851",
-
-  appId: "1:759421325851:web:7c53ddf20f1da600701ebe",
-
-  measurementId: "G-FKHJMXV1WR"
-
-};
-
+import { getFirestore, doc, setDoc, getDoc, updateDoc, DocumentData, increment } from "firebase/firestore";
+import { firebaseConfig } from "./firebaseConfig";
 
 // Initialize Firebase
 
@@ -50,7 +23,10 @@ export async function createUserData(email:string, displayName:string, password:
       password,
       classicGames: 0,
       classicWins: 0,
+      classicAvg: 0,
+      timedGames: 0,
       timedHigh: 0,
+      timedAvg: 0,
     })
       .then(() => {
         resolve(`${email} added to collection!`);
@@ -75,6 +51,24 @@ export async function getUser(email:string) : Promise<DocumentData> {
   })
 }
 
+// Updating user data
+
+export async function addClassicWin(email:string){
+
+  return new Promise( (resolve, reject) => {
+    updateDoc(doc(db, "users", email), {
+      classicGames: increment(1),
+      classicWins: increment(1),
+      classicAvg: 0,
+    })
+      .then(() => {
+        resolve(`Added new classic win for ${email}`);
+      })
+      .catch((err) => {
+        reject(err);
+      })
+    })
+}
 
 // Initialize Firebase Authentication and get a reference to the service
 
