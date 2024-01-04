@@ -18,7 +18,7 @@ export default function Signup(){
 
     async function signUpRequest() {
        
-        createUserWithEmailAndPassword(auth, email, password)
+        await createUserWithEmailAndPassword(auth, email, password)
           .then(() => {
             setUserCreated(true);
             
@@ -29,7 +29,7 @@ export default function Signup(){
             console.log(errorCode, errorMessage);
           });
 
-        createUserData(email, dname, password)
+        await createUserData(email, dname, password)
             .then(() => {
                 setDataCreated(true);
             })
@@ -41,6 +41,8 @@ export default function Signup(){
       }
 
     useEffect(() => {
+        console.log("user: " + userCreated);
+        console.log("data: " + dataCreated);
         if (userCreated && dataCreated){
             navigate("/login");
         }

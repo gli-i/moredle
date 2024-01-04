@@ -41,15 +41,17 @@ export default function Header() {
                 </div>
 
                 { !signedIn &&
-                <div className="flex-1 flex items-center justify-end gap-4 mx-4">
+                <div className="flex-1 flex items-center justify-end gap-4">
                     <Link to={'/sign-up'} className="w-1/4 flex justify-center items-center h-1/2 bg-blue-500 text-white rounded-sm cursor-pointer">Sign up</Link>
                     <Link to={'/login'} className="w-1/4 flex justify-center items-center h-1/2 bg-blue-500 text-white rounded-sm cursor-pointer">Login</Link>
+                    <div></div>
                 </div>
                 }
 
                 { signedIn &&
-                <div className="flex-1 flex items-center justify-end gap-4 mx-4">
+                <div className="flex-1 flex items-center justify-end gap-4">
                     <button onClick={handleLogout} className="w-1/4 flex justify-center items-center h-1/2 bg-blue-500 text-white rounded-sm cursor-pointer">Logout</button>
+                    <div></div>
                 </div>
                 }
             </div>

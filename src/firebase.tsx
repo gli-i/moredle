@@ -53,21 +53,85 @@ export async function getUser(email:string) : Promise<DocumentData> {
 
 // Updating user data
 
-export async function addClassicWin(email:string){
-
+function getClassicAvg(email:string, guesses:number) : Promise<number> {
   return new Promise( (resolve, reject) => {
-    updateDoc(doc(db, "users", email), {
-      classicGames: increment(1),
-      classicWins: increment(1),
-      classicAvg: 0,
+    let avgGuess = 0;
+
+    getUser(email)
+      .then((data) => {
+        avgGuess = (data.classicAvg*data.classicGames + guesses) / (data.classicGames + 1);
+        resolve(avgGuess);
+      }).catch((err) => {
+        reject(err);
     })
-      .then(() => {
-        resolve(`Added new classic win for ${email}`);
+  })
+
+}
+
+export async function addClassicWin(email:string, guesses:number){
+  getClassicAvg(email, guesses)
+    .then((avgGuess) => {
+      updateDoc(doc(db, "users", email), {
+        classicGames: increment(1),
+        classicWins: increment(1),
+        classicAvg: avgGuess,
       })
       .catch((err) => {
-        reject(err);
+        console.log(err);
       })
     })
+    .catch((err) => {
+      console.log(err);
+    })
+}
+
+export async function addClassicLoss(email:string){
+  getClassicAvg(email, 6)
+  .then((avgGuess) => {
+    updateDoc(doc(db, "users", email), {
+      classicGames: increment(1),
+      classicAvg: avgGuess,
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  })
+  .catch((err) => {
+    console.log(err);
+  })
+}
+
+function getTimedScores(email:string, newScore:number) : Promise<number[]> {
+  return new Promise( (resolve, reject) => {
+    let avgScore:number = 0;
+    let highScore:number = 0;
+
+    getUser(email)
+      .then((data) => {
+        avgScore = (data.timedAvg*data.timedGames + newScore) / (data.timedGames + 1);
+        highScore = data.timedHigh>newScore ? data.timedHigh : newScore;
+        resolve([avgScore, highScore]);
+      }).catch((err) => {
+        reject(err);
+    })
+  })
+}
+
+export async function addTimedGame(email:string, score:number){
+  getTimedScores(email, score)
+  .then(([avgScore, highScore]) => {
+    updateDoc(doc(db, "users", email), {
+      timedGames: increment(1),
+      timedHigh: highScore,
+      timedAvg: avgScore,
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  })
+  .catch((err) => {
+    console.log(err);
+  })
 }
 
 // Initialize Firebase Authentication and get a reference to the service

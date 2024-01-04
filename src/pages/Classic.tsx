@@ -10,7 +10,12 @@ import WordsGrid from '../components/WordsGrid';
 import GameOver from '../components/GameOver';
 import { NavBar } from '../components/NavBar';
 
+import { onAuthStateChanged } from "firebase/auth";
+import { auth, addClassicWin, addClassicLoss } from '../firebase';
+
 export default function Classic() {
+  const [curUser, setCurUser] = useState<string>('');
+
   const [answer, setAnswer] = useState<string>('');
 
   const [words, setWords] = useState<cellValueInterface[][]>(structuredClone(wordsArr));
@@ -65,9 +70,12 @@ export default function Classic() {
       const victory = gridEnter(answer, arrayIndex, setArrayIndex, letterIndex, setLetterIndex, words, setWords, keyboardVals, setKeyboardVals);
 
       if (victory){
+        curUser && addClassicWin(curUser, arrayIndex+1);
         setArrayIndex(6);
         setGameStatus("victory");
+
       } else if (arrayIndex > 4){ // was at last row & did not win
+        curUser && addClassicLoss(curUser);
         setGameStatus("lost");
       }
 
@@ -122,6 +130,18 @@ export default function Classic() {
       setGameStatus("running");
     }
   }, [gameStatus]);
+
+  useEffect(()=>{
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+          // User is signed in
+          setCurUser(user.email!);
+        } else {
+          setCurUser('');
+        }
+      });
+      
+}, [])
 
   return (
     <div className='h-screen flex flex-col justify-between gap-1'>

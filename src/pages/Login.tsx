@@ -13,7 +13,7 @@ export default function Login() {
     const [password, setPassword] = useState('');
 
     async function loginRequest() {
-        signInWithEmailAndPassword(auth, email, password)
+        await signInWithEmailAndPassword(auth, email, password)
         .then(() => {
             navigate("/");
         })

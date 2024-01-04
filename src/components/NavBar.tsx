@@ -20,30 +20,30 @@ export const NavBar = ({ pageWrapId, outerContainerId }: navBarProps) => {
 
   const [curUser, setCurUser] = useState<DocumentData | null>(null);
 
-    const handleLogout = () => {               
-        signOut(auth).then(() => {
-        // Sign-out successful
-            navigate("/");
-            setCurUser(null);
-            console.log("Signed out successfully")
-        }).catch((error) => {
-        // An error happened
-        });
-    }
+  const handleLogout = () => {               
+      signOut(auth).then(() => {
+      // Sign-out successful
+          navigate("/");
+          setCurUser(null);
+          console.log("Signed out successfully")
+      }).catch((error) => {
+      // An error happened
+      });
+  }
 
-    useEffect(()=>{
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-              // User is signed in
-              getUser(user.email!).then((data) => {
-                setCurUser(data);
-              });
-            } else {
-              setCurUser(null);
-            }
-          });
-         
-    }, [])
+  useEffect(()=>{
+      onAuthStateChanged(auth, (user) => {
+          if (user) {
+            // User is signed in
+            getUser(user.email!).then((data) => {
+              setCurUser(data);
+            });
+          } else {
+            setCurUser(null);
+          }
+        });
+        
+  }, [])
 
   return (
       <Menu>

@@ -12,7 +12,12 @@ import ScoreDisplay from '../components/ScoreDisplay';
 import GameOver from '../components/GameOver';
 import { NavBar } from '../components/NavBar';
 
+import { onAuthStateChanged } from "firebase/auth";
+import { auth, getUser, addTimedGame } from '../firebase';
+
 export default function Timed() {
+  const [curUser, setCurUser] = useState<string>('');
+
   const [answer, setAnswer] = useState<string>('');
 
   const [words, setWords] = useState<cellValueInterface[][]>(structuredClone(wordsArr));
@@ -146,6 +151,7 @@ export default function Timed() {
   useEffect(() => {
     if (secs <= 0 && gameStatus === "running") {
       setGameStatus("over");
+      curUser && addTimedGame(curUser, score);
     }
     if (gameStatus === "running") {
       const interval = setInterval(() => {
@@ -154,8 +160,25 @@ export default function Timed() {
 
       return () => clearInterval(interval);
     }
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [secs, gameStatus]);
+
+  useEffect(()=>{
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+          // User is signed in
+          setCurUser(user.email!);
+          getUser(user.email!)
+            .then((data) => setTopScore(data.timedHigh))
+            .catch((err) => console.log(err));
+
+        } else {
+          setCurUser('');
+          setTopScore(0);
+        }
+      });
+      
+}, [])
 
   return (
     <div className='h-screen flex flex-col justify-between'>
