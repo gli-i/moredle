@@ -28,8 +28,8 @@ export default function App() {
         </div>
       </div> 
 
-      <div className="w-screen mt-4 flex justify-center">
-        <div className="w-2/3 flex items-center text-center text-xl font-bold">
+      <div className="w-screen mt-8 flex justify-center">
+        <div className="w-2/3 flex items-start text-center text-xl font-bold">
           <div className="flex-1 flex flex-col gap-4 justify-center items-center">
             <div className="text-2xl">USER</div>
             <Link to={"/howtoplay"} className="w-2/3 bg-slate-200 rounded p-4 hover:bg-slate-100 transition-all">How To Play</Link>
@@ -40,6 +40,7 @@ export default function App() {
             <div className="text-2xl">GAME MODES</div>
             <Link to={"/classic"} className="w-2/3 bg-slate-200 rounded p-4 hover:bg-slate-100 transition-all">Classic</Link>
             <Link to={"/timed"} className="w-2/3 bg-slate-200 rounded p-4 hover:bg-slate-100 transition-all">Timed</Link>
+            <Link to={"/blanks"} className="w-2/3 bg-slate-200 rounded p-4 hover:bg-slate-100 transition-all">Blanks</Link>
           </div>
         </div>
       </div>

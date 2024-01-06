@@ -8,6 +8,7 @@ import Classic from './pages/Classic';
 import Timed from './pages/Timed';
 import Stats from './pages/Stats';
 import HowToPlay from './pages/HowToPlay';
+import Blanks from './pages/Blanks';
 import GlobalStateProvider from './globalState';
 
 import {
@@ -15,14 +16,11 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
+
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />
-  },
-  {
-    path: "/classic",
-    element: <Classic />,
   },
   {
     path: "/sign-up",
@@ -33,8 +31,16 @@ const router = createBrowserRouter([
     element: <Login />,
   },
   {
+    path: "/classic",
+    element: <Classic />,
+  },
+  {
     path: "/timed",
     element: <Timed />,
+  },
+  {
+    path: "/blanks",
+    element: <Blanks />
   },
   {
     path: "/stats",
