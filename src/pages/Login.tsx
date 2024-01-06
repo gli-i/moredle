@@ -12,15 +12,27 @@ export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
+    const [errMsg, setErrMsg] = useState<string>("");
+
     async function loginRequest() {
         await signInWithEmailAndPassword(auth, email, password)
         .then(() => {
             navigate("/");
         })
         .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            console.log(errorCode, errorMessage)
+            switch(error.code){
+                case "auth/invalid-email":
+                    setErrMsg("Please input your email.");
+                    break;
+                case "auth/missing-password":
+                    setErrMsg("Please input your password.");
+                    break;
+                case "auth/invalid-credential":
+                    setErrMsg("Invalid credentials. If you have not created an account, follow the link below to sign up.");
+                    break;
+                default:
+                    setErrMsg(error.code);
+            }
         });
     }
 
@@ -42,7 +54,11 @@ export default function Login() {
                     <label className={'text-lg py-0.5'}>Password</label>
                     <input onChange={(e)=>{setPassword(e.target.value)}} value={password} type="text" className={'h-8 border rounded border-gray-500 p-2'}/>
 
-                    <button onClick={loginRequest} type="button" className={'h-10 border rounded border-black bg-black text-white'}>Log in</button>
+                    {errMsg && 
+                        <div className="mt-3 p-1 border border-red-500 text-red-500">ERROR: {errMsg}</div>
+                    }
+
+                    <button onClick={loginRequest} type="button" className={'p-2 mt-3 border rounded border-black bg-black text-white'}>Log in</button>
 
                     <label className={'text-center text-[18px] mt-4'}> Not a member?   
                         <Link to={'/sign-up'} className='text-blue-500'> Sign up! </Link>
