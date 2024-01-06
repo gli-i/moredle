@@ -83,18 +83,18 @@ Code modified from https://github.com/Rinasham/sidebar-TypeScript-React/tree/mai
   
   .user-border {
     margin-top: auto;
-    border-top: 2px solid lightgrey;
+    border-top: 2px solid grey;
     padding-top: 15px;
   }
   
-  .user-section {
-    color: grey;
-    font-size: 16px;
+  .user-section, .user-link {
+    color: rgb(104, 104, 104);
+    font-size: 18px;
     font-weight: 600;
     margin-bottom: 15px;
     display: block;
   }
 
-  .user-section:hover {
+  .user-link:hover {
     color: black;
   }

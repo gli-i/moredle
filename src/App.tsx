@@ -35,10 +35,11 @@ export default function App() {
             <Link to={"/howtoplay"} className="w-2/3 bg-slate-200 rounded p-4 hover:bg-slate-100 transition-all">How To Play</Link>
             <Link to={"/stats"} className="w-2/3 bg-slate-200 rounded p-4 mb-6 hover:bg-slate-100 transition-all">Player Stats</Link>
           </div>
+
           <div className="flex-1 flex flex-col gap-4 justify-center items-center">
-            <div className="text-2xl">SINGLE PLAYER</div>
+            <div className="text-2xl">GAME MODES</div>
             <Link to={"/classic"} className="w-2/3 bg-slate-200 rounded p-4 hover:bg-slate-100 transition-all">Classic</Link>
-            <Link to={"/timed"} className="w-2/3 bg-slate-200 rounded p-4 hover:bg-slate-100 transition-all">Timed Mode</Link>
+            <Link to={"/timed"} className="w-2/3 bg-slate-200 rounded p-4 hover:bg-slate-100 transition-all">Timed</Link>
           </div>
         </div>
       </div>

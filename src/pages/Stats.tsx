@@ -31,7 +31,7 @@ export default function Stats() {
             <Header />
 
             <main className="w-[80vw] flex flex-col self-center">
-                <div className="text-4xl font-semibold py-10">{curUser ? `${curUser.displayName}'s Stats`: 'Log in to save stats'}</div>
+                <div className="text-4xl font-semibold py-10">{curUser ? `${curUser.displayName}'s Stats`: 'Create an account to save your stats!'}</div>
 
                 <div className="flex justify-between gap-10 text-center">
 

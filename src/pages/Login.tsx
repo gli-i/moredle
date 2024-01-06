@@ -52,7 +52,7 @@ export default function Login() {
                     <input onChange={(e)=>{setEmail(e.target.value)}} value={email} type="text" className={'h-8 border rounded border-gray-500 p-2'}/>
 
                     <label className={'text-lg py-0.5'}>Password</label>
-                    <input onChange={(e)=>{setPassword(e.target.value)}} value={password} type="text" className={'h-8 border rounded border-gray-500 p-2'}/>
+                    <input onChange={(e)=>{setPassword(e.target.value)}} value={password} type="password" className={'h-8 border rounded border-gray-500 p-2'}/>
 
                     {errMsg && 
                         <div className="mt-3 p-1 border border-red-500 text-red-500">ERROR: {errMsg}</div>
