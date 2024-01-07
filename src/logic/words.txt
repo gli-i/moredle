@@ -83,9 +83,7 @@ shown
 stood
 front
 voice
-kinds
 makes
-comes
 close
 power
 lived
@@ -734,7 +732,6 @@ fancy
 rider
 unity
 bunch
-rolls
 crash
 craft
 newly
@@ -813,7 +810,6 @@ slant
 knock
 noisy
 sorts
-stays
 wiped
 blown
 piled
@@ -886,7 +882,6 @@ puppy
 jumps
 spoil
 quart
-macro
 fears
 flung
 spark
@@ -904,7 +899,6 @@ minus
 films
 tunes
 shaft
-firms
 skies
 bride
 wreck
@@ -942,7 +936,6 @@ cable
 peach
 ruins
 rally
-schwa
 lambs
 sells
 cools
@@ -1017,7 +1010,6 @@ liver
 gauge
 breed
 stool
-gulls
 awoke
 gross
 diary
@@ -1148,7 +1140,6 @@ cloak
 onion
 clams
 scrap
-didst
 couch
 codes
 fails
@@ -1177,7 +1168,6 @@ alter
 ankle
 relay
 loops
-zeros
 bites
 modes
 debts
@@ -1265,7 +1255,6 @@ scrub
 crabs
 probe
 logic
-adobe
 exile
 rebel
 grind
@@ -1317,7 +1306,6 @@ owing
 thigh
 haiku
 swish
-dikes
 wedge
 booth
 eased
@@ -1407,10 +1395,8 @@ pears
 flush
 genus
 ached
-fives
 flaps
 spout
-smote
 fumes
 adapt
 cuffs
@@ -1436,7 +1422,6 @@ wiser
 timid
 serum
 beaks
-rotor
 casts
 baths
 glide
@@ -1460,7 +1445,6 @@ slang
 await
 civic
 saint
-bevel
 sonar
 aunts
 packs
@@ -1606,7 +1590,6 @@ boost
 broth
 heave
 gravy
-beech
 timed
 quail
 inert
@@ -1703,7 +1686,6 @@ looms
 scold
 blink
 dandy
-pupae
 sieve
 spike
 ducts
@@ -1711,15 +1693,12 @@ lends
 pizza
 brink
 widen
-plumb
-pagan
 feats
 bison
 soggy
 scoop
 argon
 nudge
-skiff
 amber
 sexes
 rouse
@@ -1792,7 +1771,6 @@ cores
 soaks
 ripen
 whine
-amino
 plaid
 spiny
 mowed
@@ -1825,7 +1803,6 @@ pixel
 bared
 mummy
 hotly
-auger
 buddy
 chaps
 badge
@@ -1833,7 +1810,6 @@ stark
 fairs
 gully
 mumps
-emery
 filly
 ovens
 drone
@@ -1848,7 +1824,6 @@ elves
 roped
 unfit
 baggy
-mower
 scant
 grabs
 fleas
@@ -1928,7 +1903,6 @@ hoops
 gasps
 hoods
 niche
-yucca
 glows
 sewer
 whack
@@ -1949,7 +1923,6 @@ piety
 chirp
 pleat
 posse
-sunup
 menus
 howls
 quake
