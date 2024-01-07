@@ -12,8 +12,8 @@ import ScoreDisplay from '../components/ScoreDisplay';
 import GameOver from '../components/GameOver';
 import { NavBar } from '../components/NavBar';
 
-/* import { onAuthStateChanged } from "firebase/auth";
-import { auth, getUser, addTimedGame } from '../firebase'; */
+ import { onAuthStateChanged } from "firebase/auth";
+import { auth, getUser, addBlanksGame } from '../firebase'; 
 
 export default function Blanks() {
   const [curUser, setCurUser] = useState<string>('');
@@ -192,7 +192,7 @@ export default function Blanks() {
 
   useEffect(() => {
     if (gameStatus === "ready") {
-      setSecs(60);
+      setSecs(120);
       resetWord();
     }
 
@@ -202,7 +202,7 @@ export default function Blanks() {
   useEffect(() => {
     if (secs <= 0 && gameStatus === "running") {
       setGameStatus("over");
-      //curUser && addTimedGame(curUser, score);
+      curUser && addBlanksGame(curUser, score);
     }
     if (gameStatus === "running") {
       const interval = setInterval(() => {
@@ -214,13 +214,13 @@ export default function Blanks() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [secs, gameStatus]);
 
-/*   useEffect(()=>{
+   useEffect(()=>{
     onAuthStateChanged(auth, (user) => {
         if (user) {
           // User is signed in
           setCurUser(user.email!);
           getUser(user.email!)
-            .then((data) => setTopScore(data.timedHigh))
+            .then((data) => setTopScore(data.blanksHigh))
             .catch((err) => console.log(err));
 
         } else {
@@ -229,7 +229,7 @@ export default function Blanks() {
         }
       });
       
-}, []) */
+}, [])
 
   return (
     <div className='h-screen flex flex-col justify-between'>
@@ -240,7 +240,7 @@ export default function Blanks() {
         <div className='flex justify-center items-center gap-4 md:hidden'>
           <Timer
             secs={secs}
-            maxMins={1}
+            maxMins={2}
           />
           <ScoreDisplay
             score={score}
@@ -284,7 +284,7 @@ export default function Blanks() {
           <div className="hidden md:flex flex-col items-center md:gap-4 lg:gap-8 2xl:gap-14 relative left-[5vw]">
             <Timer
               secs={secs}
-              maxMins={1}
+              maxMins={2}
             />
             <ScoreDisplay
               score={score}

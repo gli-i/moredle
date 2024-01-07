@@ -35,7 +35,7 @@ export default function Signup(){
             
           })
           .catch((error) => {
-            console.log(error.message);
+            //console.log(error.message);
 
             switch(error.code){
                 case "auth/invalid-email":

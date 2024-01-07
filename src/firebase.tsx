@@ -27,6 +27,9 @@ export async function createUserData(email:string, displayName:string, password:
       timedGames: 0,
       timedHigh: 0,
       timedAvg: 0,
+      blanksGames: 0,
+      blanksHigh: 0,
+      blanksAvg: 0,
     })
       .then(() => {
         resolve(`${email} added to collection!`);
@@ -124,6 +127,39 @@ export async function addTimedGame(email:string, score:number){
       timedGames: increment(1),
       timedHigh: highScore,
       timedAvg: avgScore,
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  })
+  .catch((err) => {
+    console.log(err);
+  })
+}
+
+function getBlanksScores(email:string, newScore:number) : Promise<number[]> {
+  return new Promise( (resolve, reject) => {
+    let avgScore:number = 0;
+    let highScore:number = 0;
+
+    getUser(email)
+      .then((data) => {
+        avgScore = (data.blanksAvg*data.blanksGames + newScore) / (data.blanksGames + 1);
+        highScore = data.blanksHigh>newScore ? data.blanksHigh : newScore;
+        resolve([avgScore, highScore]);
+      }).catch((err) => {
+        reject(err);
+    })
+  })
+}
+
+export async function addBlanksGame(email:string, score:number){
+  getBlanksScores(email, score)
+  .then(([avgScore, highScore]) => {
+    updateDoc(doc(db, "users", email), {
+      blanksGames: increment(1),
+      blanksHigh: highScore,
+      blanksAvg: avgScore,
     })
     .catch((err) => {
       console.log(err);

@@ -60,8 +60,9 @@ export default function Stats() {
                         <h3 className="bg-red-400 w-full text-2xl font-semibold py-4"> WIP </h3>
 
                         <ul className="p-6 text-lg flex flex-col gap-6">
-                            <li> <b> WIP </b> </li>
-
+                            <li> <b> Games Played: </b> {curUser ? curUser.blanksGames ?? 'N/A' : 'N/A'} </li>
+                            <li> <b> Top Score: </b> {curUser ? curUser.blanksHigh ?? 'N/A' : 'N/A'} </li>
+                            <li> <b> Average Score: </b> {curUser ? Math.round(curUser.blanksAvg * 100)/100 ?? 'N/A' : 'N/A'} </li>
                         </ul>
                     </div>
                 </div>
