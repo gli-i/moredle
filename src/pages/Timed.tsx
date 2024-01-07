@@ -189,6 +189,7 @@ export default function Timed() {
         <div className='flex justify-center items-center gap-4 md:hidden'>
           <Timer
             secs={secs}
+            maxMins={3}
           />
           <ScoreDisplay
             score={score}
@@ -207,6 +208,7 @@ export default function Timed() {
           <div className="flex-1 hidden md:flex flex-col items-center md:gap-4 lg:gap-8 2xl:gap-14 relative right-[5vw]">
             <Timer
               secs={secs}
+              maxMins={3}
             />
             <ScoreDisplay
               score={score}

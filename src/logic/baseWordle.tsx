@@ -1,13 +1,4 @@
 import { concatStringArr } from "./stringFunctions";
-
-export interface wordCheckResponseInterface {
-    message: string,
-    value: number,
-    found: boolean,
-    optionsArray: number[],
-    win: boolean,
-    answer: string
-  }
   
 export interface cellValueInterface {
     letter: string,
@@ -23,6 +14,14 @@ export const wordsArr:cellValueInterface[][] = [
         [{ letter: '', value: 0 }, { letter: '', value: 0 }, { letter: '', value: 0 }, { letter: '', value: 0 }, { letter: '', value: 0 }],
         [{ letter: '', value: 0 }, { letter: '', value: 0 }, { letter: '', value: 0 }, { letter: '', value: 0 }, { letter: '', value: 0 }],
   ];
+
+// default grids for blanks (4 rows)
+export const wordsArrBlanks:cellValueInterface[][] = [
+  [{ letter: '', value: 0 }, { letter: '', value: 0 }, { letter: '', value: 0 }, { letter: '', value: 0 }, { letter: '', value: 0 }],
+  [{ letter: '', value: 0 }, { letter: '', value: 0 }, { letter: '', value: 0 }, { letter: '', value: 0 }, { letter: '', value: 0 }],
+  [{ letter: '', value: 0 }, { letter: '', value: 0 }, { letter: '', value: 0 }, { letter: '', value: 0 }, { letter: '', value: 0 }],
+  [{ letter: '', value: 0 }, { letter: '', value: 0 }, { letter: '', value: 0 }, { letter: '', value: 0 }, { letter: '', value: 0 }],
+];
 
 // default state of the keyboard
 export const keyboardArr = new Map<string, number>();
@@ -72,6 +71,8 @@ export function gridBackspace(
 }
 
 // on valid guess enter
+// sets the hint colors of the word array & the keyboard array
+// moves arrayIndex up one & letterIndex back to 0
 // returns whether the guess was correct or not
 export function gridEnter(
   answer : string, 
