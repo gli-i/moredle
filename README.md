@@ -1,13 +1,16 @@
 # Moredle  
 ## [https://moredle-28217.web.app/](https://moredle-28217.web.app/)
 
+### Based off of the New York Times game [Wordle](https://www.nytimes.com/games/wordle/index.html), with additional gamemodes and stats saving
+
 ### Adapted from Fall 2023 CMPT276 Group Project:
 [https://github.com/sw2003/cmpt276-wordle](https://github.com/sw2003/cmpt276-wordle)
 
-### Changes:
+### Changes from original project:
 - added additional gamemode: Blanks, along with guide on the HowToPlay page
 - redid user signup, login and data storage with own storage API
 - fully implemented and designed stats page
+- greatly expanded word bank and changed the implementation of getting new answers
 - minor UI changes, notably on the navigation bar and the signup and login pages
 
 
