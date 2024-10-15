@@ -57,7 +57,7 @@ export default function Stats() {
                     </div>
 
                     <div className="flex-1 border-4 border-red-400">
-                        <h3 className="bg-red-400 w-full text-2xl font-semibold py-4"> WIP </h3>
+                        <h3 className="bg-red-400 w-full text-2xl font-semibold py-4"> Blanks </h3>
 
                         <ul className="p-6 text-lg flex flex-col gap-6">
                             <li> <b> Games Played: </b> {curUser ? curUser.blanksGames ?? 'N/A' : 'N/A'} </li>
