@@ -28,11 +28,11 @@ If there is a dependency error, run 'npm install --legacy-peer-deps'
 ## 3. Register for Firebase at https://firebase.google.com/ and create a new project at https://console.firebase.google.com/u/0/
 Add a new app by click the Web Icon (</>)  
 
-## 4. Create a .env file in the project's root folder, with the following contents, filling in asterisks * with the SDKs given to you in your newly created Firebase app:
-REACT_APP_API_KEY=*******  
-REACT_APP_AUTH_DOMAIN=********.firebaseapp.com  
-REACT_APP_PROJECT_ID=********  
-REACT_APP_STORAGE_BUCKET=********.appspot.com  
-REACT_APP_MESSAGING_SENDER_ID=********  
+## 4. Create a .env file in the project's root folder, with the following contents, filling it in with the SDKs given to you in your newly created Firebase app:
+REACT_APP_API_KEY=YOUR_API_KEY  
+REACT_APP_AUTH_DOMAIN=YOUR_AUTH_DOMAIN  
+REACT_APP_PROJECT_ID=YOUR_PROJECT_ID  
+REACT_APP_STORAGE_BUCKET=YOUR_STORAGE_BUCKET  
+REACT_APP_MESSAGING_SENDER_ID=YOUR_MESSAGING_SENDER_ID  
 
 ## 5. Run the code by running 'npm start' to launch it into your browser
